@@ -57,9 +57,11 @@
         .flipped {
             transform: rotateY(-180deg);
         }
-        .page:focus {
-    outline: none; /* Remove default focus outline */
-    box-shadow: none; /* Remove any box-shadow applied on focus */
+      .page:focus,
+.page:active {
+    outline: none !important; /* Remove default focus outline */
+    box-shadow: none !important; /* Remove any box-shadow applied on focus or active state */
+    background-color: transparent !important; /* Ensure no background color is applied */
 }
 
     </style>

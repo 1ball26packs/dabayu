@@ -76,6 +76,12 @@ a:active {
 <div id="flipbook"></div>
 
 <script>
+
+    / Prevent right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+    });
+    
     const folderPath = 'images/'; // Change to the path of your images folder
     const imageCount = 10; // Number of images in the folder
     const flipbook = document.getElementById('flipbook');

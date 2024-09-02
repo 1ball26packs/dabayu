@@ -63,11 +63,6 @@
     box-shadow: none !important; /* Remove any box-shadow applied on focus or active state */
     background-color: transparent !important; /* Ensure no background color is applied */
 }
-        a:focus,
-a:active {
-    outline: none; /* Remove default focus outline */
-    background-color: transparent; /* Ensure no background color is applied */
-}
 
     </style>
 </head>
@@ -76,12 +71,6 @@ a:active {
 <div id="flipbook"></div>
 
 <script>
-
-    / Prevent right-click context menu
-    document.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-    });
-    
     const folderPath = 'images/'; // Change to the path of your images folder
     const imageCount = 10; // Number of images in the folder
     const flipbook = document.getElementById('flipbook');

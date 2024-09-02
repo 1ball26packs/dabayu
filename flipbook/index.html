@@ -18,7 +18,7 @@
             position: relative;
             width: 400px;
             height: 500px;
-            perspective: 1200px; /* Adjust perspective for better 3D effect */
+            perspective: 1500px;
             margin-left: 20px;
             margin-right: 20px;
         }
@@ -28,9 +28,9 @@
             position: absolute;
             transform-origin: left;
             transform-style: preserve-3d;
-            transition: transform 0.75s ease, box-shadow 0.75s ease; /* Smoother transition */
+            transition: transform 3s ease;
             backface-visibility: hidden;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
         }
         .page img {
             width: 100%;
@@ -44,16 +44,18 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+            
             transform: translateX(-100%);
-            transition: transform 0.75s ease;
+            transition: transform 5s ease, opacity 5s ease;
             z-index: 1;
+            opacity: 1; /* Ensure opacity is set to visible during the flip */
+        }
+        .page.flipped::before {
+            transform: translateX(0);
+            opacity: 0; /* Hide shadow once flipped */
         }
         .flipped {
             transform: rotateY(-180deg);
-        }
-        .flipped::before {
-            transform: translateX(0);
         }
     </style>
 </head>
@@ -62,17 +64,17 @@
 <div id="flipbook"></div>
 
 <script>
-    const folderPath = 'images/'; // Ganti dengan path folder gambar
-    const imageCount = 10; // Jumlah gambar dalam folder
+    const folderPath = 'images/'; // Change to the path of your images folder
+    const imageCount = 10; // Number of images in the folder
     const flipbook = document.getElementById('flipbook');
 
-    // Membuat elemen img untuk setiap gambar dan membungkusnya dalam div.page
+    // Create img elements for each image and wrap them in div.page
     for (let i = 1; i <= imageCount; i++) {
         const page = document.createElement('div');
         page.classList.add('page');
-        page.style.zIndex = imageCount - i; // Mengatur z-index agar halaman pertama berada di atas
+        page.style.zIndex = imageCount - i; // Set z-index so the first page is on top
         const img = document.createElement('img');
-        img.src = `${folderPath}${i}.png`; // Nama file sekarang adalah angka saja, misalnya 1.png, 2.png, dll.
+        img.src = `${folderPath}${i}.png`; // Image file names are now just numbers, e.g., 1.png, 2.png, etc.
         page.appendChild(img);
         flipbook.appendChild(page);
     }
@@ -95,12 +97,12 @@
             setTimeout(() => {
                 pages.forEach(p => p.classList.remove('flipped'));
                 currentIndex = 0;
-            }, 750); // Match the transition duration
+            }, 1000); // Add delay for flipping effect
         } else if (currentIndex < 0) {
             setTimeout(() => {
                 pages.forEach(p => p.classList.add('flipped'));
                 currentIndex = imageCount - 1;
-            }, 750); // Match the transition duration
+            }, 1000); // Add delay for flipping effect
         }
     }
 

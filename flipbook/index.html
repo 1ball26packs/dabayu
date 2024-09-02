@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realistic Magazine Flipbook</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+            overflow: hidden;
+        }
+        #flipbook {
+            position: relative;
+            width: 400px;
+            height: 500px;
+            perspective: 1500px;
+        }
+        .page {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-origin: left;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+            backface-visibility: hidden;
+            cursor: pointer;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .page img {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        .page::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0) 100%);
+            transform: translateX(-100%);
+            transition: transform 1s ease;
+            z-index: 1;
+        }
+        .flipped {
+            transform: rotateY(-180deg);
+        }
+        .flipped::before {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+<div id="flipbook"></div>
+
+<script>
+    const folderPath = 'images/'; // Ganti dengan path folder gambar
+    const imageCount = 10; // Jumlah gambar dalam folder
+    const flipbook = document.getElementById('flipbook');
+
+    // Membuat elemen img untuk setiap gambar dan membungkusnya dalam div.page
+    for (let i = 1; i <= imageCount; i++) {
+        const page = document.createElement('div');
+        page.classList.add('page');
+        page.style.zIndex = imageCount - i; // Mengatur z-index agar halaman pertama berada di atas
+        const img = document.createElement('img');
+        img.src = `${folderPath}${i}.png`; // Nama file sekarang adalah angka saja, misalnya 1.png, 2.png, dll.
+        page.appendChild(img);
+        flipbook.appendChild(page);
+    }
+
+    let currentIndex = 0;
+    const pages = document.querySelectorAll('.page');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function flipPage(index, direction) {
+        if (direction === 'next') {
+            pages[index].classList.add('flipped');
+            currentIndex++;
+        } else if (direction === 'prev') {
+            pages[index].classList.remove('flipped');
+            currentIndex--;
+        }
+
+        if (currentIndex >= imageCount) {
+            setTimeout(() => {
+                pages.forEach(p => p.classList.remove('flipped'));
+                currentIndex = 0;
+            }, 1000); // Tambahkan delay untuk efek flipping
+        } else if (currentIndex < 0) {
+            setTimeout(() => {
+                pages.forEach(p => p.classList.add('flipped'));
+                currentIndex = imageCount - 1;
+            }, 1000); // Tambahkan delay untuk efek flipping
+        }
+    }
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX) {
+            if (currentIndex < imageCount) {
+                flipPage(currentIndex, 'next');
+            }
+        } else if (touchEndX > touchStartX) {
+            if (currentIndex > 0) {
+                flipPage(currentIndex - 1, 'prev');
+            }
+        }
+    }
+
+    flipbook.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    flipbook.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].clientX;
+        handleSwipe();
+    });
+
+    pages.forEach((page, index) => {
+        page.addEventListener('click', () => {
+            if (!page.classList.contains('flipped') && index === currentIndex) {
+                flipPage(index, 'next');
+            } else if (page.classList.contains('flipped') && index === currentIndex - 1) {
+                flipPage(index, 'prev');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
